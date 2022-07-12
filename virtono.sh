@@ -111,8 +111,7 @@ echo $IP6
 gen_data >$WORKDIR/data.txt
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
-# wget -P $WORKDIR https://github.com/chucuoi1/test_ipv6/raw/main/checkb.sh
-# wget -P $WORKDIR https://github.com/chucuoi1/test_ipv6/raw/main/checkc.sh
+gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 
 cat >>/etc/rc.local <<EOF
 bash ${WORKDIR}/boot_iptables.sh
