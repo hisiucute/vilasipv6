@@ -32,17 +32,6 @@ install_3proxy() {
 	ln -s Makefile.Linux Makefile
 	make
 	sudo make install
-    echo "* hard nofile 999999" >>  /etc/security/limits.conf
-    echo "* soft nofile 999999" >>  /etc/security/limits.conf
-    echo "net.ipv6.conf.$ifname.proxy_ndp=1" >> /etc/sysctl.conf
-    echo "net.ipv6.conf.all.proxy_ndp=1" >> /etc/sysctl.conf
-    echo "net.ipv6.conf.default.forwarding=1" >> /etc/sysctl.conf
-    echo "net.ipv6.conf.all.forwarding=1" >> /etc/sysctl.conf
-    echo "net.ipv6.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
-    sysctl -p
-	systemctl stop ufw
-    systemctl disable ufw
-
     cd $WORKDIR
 }
 gen_3proxy() {
@@ -84,7 +73,7 @@ gen_data() {
 
 echo "installing apps"
 
-sudo apt install build-essential net-tools curl wget git zip ifupdown libarchive-tools make gcc -y >/dev/null
+sudo apt install build-essential net-tools curl wget git zip ifupdown libarchive-tools make gcc -y
 install_3proxy
 
 echo "working folder = /home/proxy-installer"
@@ -101,5 +90,3 @@ echo $IP6
 gen_data >$WORKDIR/data.txt
 
 gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
-
-
