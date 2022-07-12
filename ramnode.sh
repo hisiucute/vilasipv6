@@ -23,17 +23,7 @@ gen64() {
 }
 
 
-enable_ipv6() {
-	echo "net.ipv6.conf.default.disable_ipv6=0" >> /etc/sysctl.conf
-	echo "net.ipv6.conf.all.disable_ipv6=0" >> /etc/sysctl.conf
-	cat >>/etc/network/interfaces <<EOF
-iface ens3 inet6 static
-pre-up modprobe ipv6
-address 2604:7c00:16:184::2/64
-gateway 2604:7c00:16::1
-EOF
-	systemctl restart networking
-}
+
 
 install_3proxy() {
     echo "installing 3proxy"
@@ -87,23 +77,7 @@ gen_data() {
     done
 }
 
-gen_iptables() {
-    cat <<EOF
-$(awk -F "/" '{print "iptables -I INPUT -p tcp --dport " $4 "  -m state --state NEW -j ACCEPT"}' ${WORKDATA}) 
-EOF
-}
 
-gen_ifconfig() {
-    cat <<EOF
-$(awk -F "/" '{print "ifconfig " $6 " inet6 add " $5 "/64"}' ${WORKDATA})
-EOF
-}
-
-gen_ping () {
-	cat <<EOF
-$(awk -F "/" '{print "ping6 -c 5 -I " $5 " ipv6.google.com"}' ${WORKDATA})
-EOF
-}
 
 
 #enable_ipv6
@@ -125,15 +99,7 @@ echo $IP6
 
 
 gen_data >$WORKDIR/data.txt
-gen_iptables >$WORKDIR/boot_iptables.sh
-gen_ifconfig >$WORKDIR/boot_ifconfig.sh
-#gen_ping >$WORKDIR/ping.sh
+
 gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 
-cat >>/etc/rc.local <<EOF
-bash ${WORKDIR}/boot_iptables.sh
-bash ${WORKDIR}/boot_ifconfig.sh
-bash $WORKDIR/ping.sh
-EOF
-chmod +x $WORKDIR/*.sh
-bash /etc/rc.local
+
