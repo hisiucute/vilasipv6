@@ -94,7 +94,7 @@ echo "installing apps"
 
 # sudo apt update
 # sudo apt upgrade -y
-sudo apt install build-essential net-tools curl wget git zip ifupdown libarchive-tools make gcc screen -y >/dev/null
+sudo apt install build-essential net-tools curl wget git zip ifupdown libarchive-tools make gcc screen -y
 install_3proxy
 
 echo "working folder = /home/proxy-installer"
